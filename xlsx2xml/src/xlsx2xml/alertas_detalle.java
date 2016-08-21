@@ -1,6 +1,7 @@
 package xlsx2xml;
 
 import java.io.BufferedWriter;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -277,7 +278,7 @@ public class alertas_detalle
   
   private static void printHelp(Options options)
   {
-    HelpFormatter formatter = new HelpFormatter();
+    HelpFormatter formatter = new HelpFormatter(); 
     formatter.printHelp("parsebiomedidas.jar", options);
   }
 }
