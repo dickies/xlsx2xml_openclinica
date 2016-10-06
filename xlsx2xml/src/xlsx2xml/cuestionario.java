@@ -52,7 +52,7 @@ public class cuestionario
     
     File inputFile = null;
     String outputFile = "/tmp/importacion_cuestionario.xml";
-    String ddbb = "openclinica.caebi.es";
+    String ddbb = "192.168.1.79";
     String port_ddbb = "5435";
     boolean first_import = false;
     
@@ -188,7 +188,7 @@ public class cuestionario
               if (primera_pasada)
               {
                 repeatkey = 1;
-                primera_pasada = false;
+                //primera_pasada = false;
               }
               original_organo = formatCell(row.getCell(2));
               if (formatCell(row.getCell(2)).equals("¿Cómo está mi corazón?"))
@@ -210,8 +210,9 @@ public class cuestionario
                 }
                 ResultSet rs = stmt.executeQuery("select item_data.ordinal from item_data, event_crf, crf, study_event,item_group, item_group_metadata where item_data.event_crf_id = event_crf.event_crf_id and event_crf.study_event_id = study_event.study_event_id and study_event.study_subject_id = " + Subject_id + " and item_data.item_id = item_group_metadata.item_id and item_group_metadata.item_group_id = item_group.item_group_id and item_group.crf_id = crf.crf_id and crf.crf_id = " + crf_id + " and item_group.oc_oid like 'IG_CUEST_" + Igroup + "' group by item_data.ordinal order by item_data.ordinal desc limit 1");
                 while (rs.next()) {
-                  if ((Integer.parseInt(rs.getString("ordinal")) != 1) && (!Igroup.equals("PULMONES"))) {
+                  if ((Integer.parseInt(rs.getString("ordinal")) != 1) && (!Igroup.equals("PULMONES")) && primera_pasada ) {
                     repeatkey = Integer.parseInt(rs.getString("ordinal")) + 1;
+                    primera_pasada = false;
                   } else {
                     repeatkey = Integer.parseInt(rs.getString("ordinal"));
                   }
@@ -273,7 +274,7 @@ public class cuestionario
                 out.println("\t\t\t\t\t\t\t<ItemData ItemOID=\"I_CUEST_SENTADO\" Value= \"" + row.getCell(7) + "\"/>");
               } else if (formatCell(row.getCell(5)).equals("Me he sentido más mareado o débil de lo habitual:")) {
                 out.println("\t\t\t\t\t\t\t<ItemData ItemOID=\"I_CUEST_MAREADO\" Value= \"" + row.getCell(7) + "\"/>");
-              } else if (formatCell(row.getCell(5)).equals("He tenido dolor en el pecho más de lo habitual:")) {
+              } else if (formatCell(row.getCell(5)).equals("He tenido mas dolor en el pecho de lo habitual:")) {
                 out.println("\t\t\t\t\t\t\t<ItemData ItemOID=\"I_CUEST_PECHO\" Value= \"" + row.getCell(7) + "\"/>");
               } else if (formatCell(row.getCell(5)).equals("En general, hoy me siento peor que ayer:")) {
                 out.println("\t\t\t\t\t\t\t<ItemData ItemOID=\"I_CUEST_PEOR\" Value= \"" + row.getCell(7) + "\"/>");
